@@ -109,13 +109,15 @@ void draw() {
   }
   if (hp > 100) {
     hp = 100;
-  }  
-  for (int i = 0; i < 10; i++) {
-   if (random(1, 98) > 90)
+  } 
+   if (random(1, 1000) > 990)
       p = 1;
    else 
       p = 0;
-   //p = 0 ;
+   p = 1;
+   for (int i = 0; i < 10; i++) {
+
+   //p = 1 ;
     movement();
     ground = 0;
     //screen movement and safe gaurds
@@ -325,10 +327,11 @@ void  movement() {
   }
 
   //println(scan);
-  println(p);
-  if ((p > 0) && ground == 1 && ((millis() - scan) > 1000)) {    
+
+  if ((p > 0) && ((millis() - scan) > 1000)) {    
     psy -= 0.6;
     scan = millis();
+    println(ground);
   }
   //print(scan);
   //print("|");
