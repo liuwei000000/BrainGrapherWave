@@ -1,4 +1,20 @@
 //Tiao Ken by LiuW 2017 //<>//
+/*
+one pakges 8 bytes
+ one big pakge 36 bytes
+ 1 second 512 pakges + 1 big pakges = 512 * 8 + 36 = 4132 bytes
+ */
+import processing.serial.*;
+Serial port;
+//String s = "/dev/tty.Sichiray-Port";
+String s = "COM14";
+long right = 0;
+long wrong = 0;
+float[] data;
+byte[] inBuffer;
+int BL = 4132;
+int p = 0;
+int scan = 1;
 
 int[][] level = new int [100][];
 float sx = 0;
@@ -26,6 +42,13 @@ int scaleY = 0;
 
 void setup() {
   size(600, 400);
+  //port = new Serial(this, s, 57600);
+  //port.buffer(BL);
+  inBuffer = new byte[BL];
+  data = new float[width]; 
+  //for (int i = 0; i < width; i++) data[i] = 100*sin(i*1.0/20) + 150;  
+  for (int i = 0; i < width; i++) data[i] = 0;  
+
   noStroke();
   //generate level
   for (int x = 0; x < 100; x++) {
@@ -75,10 +98,8 @@ void setup() {
 }
 
 
-
-
-
 void draw() {
+
   scale(width / 600, height / 400);
   scaleX = width / 600;
   scaleY = height / 400;  
@@ -90,6 +111,11 @@ void draw() {
     hp = 100;
   }  
   for (int i = 0; i < 10; i++) {
+   if (random(1, 98) > 90)
+      p = 1;
+   else 
+      p = 0;
+   //p = 0 ;
     movement();
     ground = 0;
     //screen movement and safe gaurds
@@ -286,18 +312,29 @@ void  movement() {
   if (keyPressed && key == CODED) {
     if (keyCode == UP  && ground == 1) {
       psy -= 0.6;
+      println(aaa++);
     } else if (keyCode == UP  && ground == 2) {
       psy -= 0.002;
     } else if (keyCode == UP  && ground == 3) {
-      psy -= 0.003;
+      psy -= 0.003;  
     } else if (keyCode == RIGHT) {
       psx += 0.001;
     } else if (keyCode == LEFT) {
       psx -= 0.001;
     }
   }
-}
 
+  //println(scan);
+  println(p);
+  if ((p > 0) && ground == 1 && ((millis() - scan) > 1000)) {    
+    psy -= 0.6;
+    scan = millis();
+  }
+  //print(scan);
+  //print("|");
+  //println(millis());
+}
+int aaa = 0;
 void die() {
   sx = 0;
   sy = 200;
@@ -341,5 +378,32 @@ void bounce(int x, int y) {
   }
   if (px > x * 50 && py > y * 50 && px < x * 50 + 50 && py < y * 50 + 50) {
     hp -= 0.08;
+  }
+}
+
+void serialEvent(Serial port) {
+  while (port.available() > 0) {
+    inBuffer = port.readBytes();
+    for (int m = 0; m < BL - 4; m++) {
+      if (inBuffer[m] == byte(0xAA) &&
+        inBuffer[m + 1] == byte(0xAA) &&
+        inBuffer[m + 2] == byte(0x04)) {
+        int d1 = int(inBuffer[m + 5]);
+        int d2 = int(inBuffer[m + 6]);
+        int sum = int(inBuffer[m + 7]);
+        int csum = ((0x80 + 0x02 + d1 + d2) ^ 0xffffffff) & 0xff;
+        if (sum == csum) {
+          right++;
+          long d = (d1 << 8) | d2;
+          if (d > 32768) d -=65536;
+          float v = map(d, -1500, 1500, 0, height);
+          if (v > 500 ) {
+            p = 1;
+          } 
+        } else {
+          wrong++;
+        }
+      }
+    }
   }
 }
