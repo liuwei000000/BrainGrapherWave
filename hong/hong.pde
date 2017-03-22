@@ -110,11 +110,13 @@ void draw() {
   if (hp > 100) {
     hp = 100;
   } 
-   if (random(1, 1000) > 990)
+   if (random(1, 1000) > 995) {
       p = 1;
-   else 
+        println(p);
+   }else 
       p = 0;
-   p = 1;
+
+
    for (int i = 0; i < 10; i++) {
 
    //p = 1 ;
@@ -314,7 +316,6 @@ void  movement() {
   if (keyPressed && key == CODED) {
     if (keyCode == UP  && ground == 1) {
       psy -= 0.6;
-      println(aaa++);
     } else if (keyCode == UP  && ground == 2) {
       psy -= 0.002;
     } else if (keyCode == UP  && ground == 3) {
@@ -327,17 +328,15 @@ void  movement() {
   }
 
   //println(scan);
-
-  if ((p > 0) && ((millis() - scan) > 1000)) {    
+  if ((p > 0) && ground == 1 && ((millis() - scan) > 1000)) {    
     psy -= 0.6;
     scan = millis();
-    println(ground);
   }
   //print(scan);
   //print("|");
   //println(millis());
 }
-int aaa = 0;
+
 void die() {
   sx = 0;
   sy = 200;
