@@ -6,7 +6,7 @@ one pakges 8 bytes
  */
 import processing.sound.*;
 import processing.serial.*;/* import serial library */
-SoundFile f1, f2;
+SoundFile f0, f1, f2, f3;
 Serial port;
 //String s = "/dev/tty.Sichiray-Port";  /* for mac */
 String s = "COM3"; /* for windows */
@@ -44,7 +44,11 @@ int scaleY = 0;
 
 void setup() {
   size(600, 400);
+  f0 = new SoundFile(this, "z.mp3");
   f1 =new SoundFile(this, "b.wav");
+  f2 =new SoundFile(this, "s.mp3");
+
+  f0.loop();
   //port = new Serial(this, s, 57600); //<>//
   //port.buffer(BL);
   inBuffer = new byte[BL];
@@ -303,6 +307,7 @@ void draw() {
     background(255, 0, 0, died * 5);
     died--;
   }
+  if (died == 1) f0.loop();
   powermaxb = powermax;
   powermax = 0;
 }
@@ -311,7 +316,7 @@ void  movement() {
   if (keyPressed && key == CODED) {
     if (keyCode == UP  && ground == 1) {
       psy -= 0.6;
-      f1.play(); //<>//
+      f1.play();
     } else if (keyCode == UP  && ground == 2) {
       psy -= 0.002;
     } else if (keyCode == UP  && ground == 3) {
@@ -337,8 +342,10 @@ void die() {
   py = 475;
   psx = 0;
   psy = 0;
-  died = 80;
+  died = 100;
   hp = 100;
+  f0.stop();
+  f2.play();
 }
 
 void bounce(int x, int y) {
