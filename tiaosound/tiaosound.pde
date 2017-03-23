@@ -5,8 +5,8 @@ one pakges 8 bytes
  1 second 512 pakges + 1 big pakges = 512 * 8 + 36 = 4132 bytes
  */
 import processing.sound.*;
-SoundFile f1, f2;
 import processing.serial.*;/* import serial library */
+SoundFile f1, f2;
 Serial port;
 //String s = "/dev/tty.Sichiray-Port";  /* for mac */
 String s = "COM3"; /* for windows */
