@@ -333,6 +333,7 @@ void  movement() {
   if ((p > 0) && ground == 1) {    
     psy -= 0.6;                  
     f1.play();
+    p = 0;
   }
 }
 void die() {
@@ -399,20 +400,18 @@ void serialEvent(Serial port) {
         if (sum == csum) {
           right++;
           long d = (d1 << 8) | d2;
-          if (d > 32768) d -=6553;
+          if (d > 32768) d -=65536;
           if (d > 1500) d = 1500;
           if (d < -1500) d = -1500;
-          // map to screen 
-          float middle = height / 2;
-          float h = (d / 3000.0) * (height - 20) + middle;
-          data[p1] = h;
-          p1++;
-          if (p1 >= DATA_L) p1 =0;          
           if (d > 700 ) {
             p = 1;
-          } else {
-            p = 0;
           }
+          // map to screen 
+          float middle = height / 2;
+          float h = (d / 3000.0) * (height - 20) + 200;
+          data[p1] = h;
+          p1++;
+          if (p1 >= DATA_L) p1 =0;
         } else {
           wrong++;
         }
