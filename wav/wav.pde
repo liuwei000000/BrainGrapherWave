@@ -7,7 +7,7 @@ one pakges 8 bytes
 import processing.serial.*;
 Serial port;
 //String s = "/dev/tty.Sichiray-Port";
-String s = "COM14";
+String s = "COM4";
 long right = 0;
 long wrong = 0;
 float[] data;
@@ -32,7 +32,7 @@ void setup() {
 
 void draw0() {
   background(0);
-  stroke(255);
+  stroke(255,0,0,80);
   strokeWeight(1);
   p++;
   for (int j = 0; j < width; j+= scan) {
