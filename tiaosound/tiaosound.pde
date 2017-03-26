@@ -38,6 +38,7 @@ int scaleY = 0;
 final int DATA_L = 6000;
 float scan = 0.1;
 float offset = 0;
+final int YZ = 900;  // above jump 
 
 void setup() {
   size(600, 400);//window size
@@ -310,6 +311,8 @@ void draw() {
       line(j, height - data[x], j + scan, height - data[x + 1]);
     }
   }
+  stroke(0, 0, 255, 60);
+  line(20, height - ((YZ / 3000.0) * (height - 20) + height/2), width -20 , height - ((YZ / 3000.0) * (height - 20) + height/2));
   strokeWeight(0);
   noStroke(); //
 }
@@ -403,12 +406,11 @@ void serialEvent(Serial port) {
           if (d > 32768) d -=65536;
           if (d > 1500) d = 1500;
           if (d < -1500) d = -1500;
-          if (d > 700 ) {
+          if (d > YZ ) {
             p = 1;
           }
           // map to screen 
-          float middle = height / 2;
-          float h = (d / 3000.0) * (height - 20) + 200;
+          float h = (d / 3000.0) * (height - 20) + height / 2;
           data[p1] = h;
           p1++;
           if (p1 >= DATA_L) p1 =0;
