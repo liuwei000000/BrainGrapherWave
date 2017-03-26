@@ -4,21 +4,20 @@ one pakges 8 bytes
  one big pakge 36 bytes
  1 second 512 pakges + 1 big pakges = 512 * 8 + 36 = 4132 bytes
  */
-import processing.sound.*;
+import processing.sound.*;/* import sound library */
 import processing.serial.*;/* import serial library */
-SoundFile f0, f1, f2, f3;
-Serial port;
+SoundFile f0, f1, f2, f3; // 4 sound file
+Serial port; 
 //String s = "/dev/tty.Sichiray-Port";  /* for mac */
-String s = "COM3"; /* for windows */
+String s = "COM1"; /* for windows */
 long right = 0;
 long wrong = 0;
 float[] data;
 byte[] inBuffer;
 int BL = 4132;
 int p = 0;
-int scan = 1;
 
-int[][] level = new int [100][];
+int[][] level = new int [100][];//The map 100 * 100
 float sx = 0;
 float sy = 200;
 float px = 125;
@@ -31,30 +30,29 @@ float gy = 0;
 float gsx = 0;
 float gsy = 0;
 float death = 0;
-int power = 0;
-int powerb = 0;
-int powermax = 0;
-int powermaxb = 0;
 int died = 0;
 float hp = 100;
-int saverofworlds = 0;
 int mem1 = 0;
 int scaleX = 0;
 int scaleY = 0;
+final int DATA_L = 6000;
+float scan = 0.1;
+float offset = 0;
 
 void setup() {
-  size(600, 400);
+  size(600, 400);//window size
   f0 = new SoundFile(this, "z.mp3");
-  f1 =new SoundFile(this, "b.wav");
-  f2 =new SoundFile(this, "s.mp3");
+  f1 = new SoundFile(this, "b.wav");
+  f2 = new SoundFile(this, "s.mp3");
 
   f0.loop();
-  //port = new Serial(this, s, 57600); //<>//
-  //port.buffer(BL);
+  port = new Serial(this, s, 57600);
+  port.buffer(BL);
   inBuffer = new byte[BL];
-  data = new float[width]; 
-  //for (int i = 0; i < width; i++) data[i] = 100*sin(i*1.0/20) + 150;  
-  for (int i = 0; i < width; i++) data[i] = 0;  
+  data = new float[DATA_L]; 
+  for (int i = 0; i < DATA_L; i++) data[i] = 200;
+  //for (int i = 0; i < DATA_L; i++) data[i] = 190*sin(i*1.0/20) + 200;   
+  //for (int i = DATA_L - 200 ; i < DATA_L; i++) data[i] = 200;  
   background(0);
   noStroke();
   //generate level
@@ -71,15 +69,15 @@ void setup() {
     }
   }    
   // creat water
-  for (int k = 0; k < 6; k++) {
-    gx = random(1, 98);
-    gy = 10;
+  for (int k = 0; k < 8; k++) {
+    gx = random(6, 98);
+    gy =10;
     gsx = 0;
     gsy = 0;
     level[round(gx)][round(gy)] = 3;
-    level[round(gx - 1)][round(gy)] = 3;
-    level[round(gx + 1)][round(gy)] = 3;
-    level[round(gx)][round(gy + 1)] = 3;
+    //level[round(gx - 1)][round(gy)] = 3;
+    //level[round(gx + 1)][round(gy)] = 3;
+    //level[round(gx)][round(gy + 1)] = 3;
   }
 
   //create tree
@@ -104,20 +102,20 @@ void setup() {
   }
 }
 
+long lll = 0;
 void draw() {
-  //print(wrong);
-  //print("|"); 
-  //println(right);
+  if (lll++ % 40 == 0) {
+    print(wrong);
+    print("|"); 
+    println(right);
+  }
   scale(width / 600, height / 400);
   scaleX = width / 600;
   scaleY = height / 400;  
-  powerb = 0; 
   if (hp < 0) {
     die();
   }
-  if (hp > 100) {
-    hp = 100;
-  }  
+
   for (int i = 0; i < 10; i++) {
     movement();
     ground = 0;
@@ -271,18 +269,6 @@ void draw() {
               fill(250, 250, 200, 5);
               //ellipse(x * 50 - sx + 25, y * 50 - sy + 25, random(80, 150));
             }
-          } else if (level[x][y] == 29) {
-            if (y > 0) {
-              if (level[x][y - 1] == 30 || level[x][y - 1] == 33) {
-                if (power > 0) {
-                  power -= 1;
-                  for (int a = 0; a < 50; a++) {
-                    fill(250, 8);
-                    //ellipse(x * 50 - sx + 25, y * 50 - sy + 25, a * 10);
-                  }
-                }
-              }
-            }
           }
         }
       }
@@ -308,8 +294,24 @@ void draw() {
     died--;
   }
   if (died == 1) f0.loop();
-  powermaxb = powermax;
-  powermax = 0;
+
+
+  stroke(255, 0, 0, 20);
+  strokeWeight(1);
+  //right = 10000;
+  for (float j = 0; j < width; j+= scan) {
+    if (right > DATA_L) {
+      offset = right % DATA_L;
+    }
+    int x = round(offset + j/scan);
+    while (x >= DATA_L) x -= DATA_L;
+    while (j >= width) j -= width;
+    if (j + scan < width && x + 1 < DATA_L) {
+      line(j, height - data[x], j + scan, height - data[x + 1]);
+    }
+  }
+  strokeWeight(0);
+  noStroke(); //
 }
 
 void  movement() {
@@ -328,11 +330,9 @@ void  movement() {
     }
   }
 
-  //printIn(scan);
-  if ((p > 0) && ground == 1 && ((millis() - scan) > 1000)) {    
+  if ((p > 0) && ground == 1) {    
     psy -= 0.6;                  
-    f1.play();  
-    scan = millis();
+    f1.play();
   }
 }
 void die() {
@@ -384,6 +384,7 @@ void bounce(int x, int y) {
   }
 }
 
+int p1 = 0;
 void serialEvent(Serial port) {
   while (port.available() > 0) {
     inBuffer = port.readBytes();
@@ -398,12 +399,19 @@ void serialEvent(Serial port) {
         if (sum == csum) {
           right++;
           long d = (d1 << 8) | d2;
-          if (d > 32768) d -=65536;
-          float v = map(d, -1500, 1500, 0, height);
-          // print("|v"); 
-          //println(v);
-          if (v > 300 ) {
+          if (d > 32768) d -=6553;
+          if (d > 1500) d = 1500;
+          if (d < -1500) d = -1500;
+          // map to screen 
+          float middle = height / 2;
+          float h = (d / 3000.0) * (height - 20) + middle;
+          data[p1] = h;
+          p1++;
+          if (p1 >= DATA_L) p1 =0;          
+          if (d > 700 ) {
             p = 1;
+          } else {
+            p = 0;
           }
         } else {
           wrong++;
