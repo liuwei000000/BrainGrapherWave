@@ -101,6 +101,7 @@ void setup() {
       l -= 0.9999;
     }
   }
+  level[99][9] = 12;
 }
 
 long lll = 0;
@@ -117,7 +118,7 @@ void draw() {
     die();
   }
 
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < 6; i++) {
     movement();
     ground = 0;
     //screen movement and safe gaurds
@@ -251,6 +252,14 @@ void draw() {
           if (i == 0) {
             fill(100, 100, 100);
             rect(x * 50 - sx, y * 50 - sy, 50, 50);
+          }
+        } else if (level[x][y] == 12) {
+          bounce(x, y);
+          if (i == 0) {
+            fill(255, 0, 0);
+            textSize(32);
+            text("win", x * 50 - sx, y * 50 - sy);
+            //rect(x * 50 - sx, y * 50 - sy, 50, 50);
           }
         }
       }
