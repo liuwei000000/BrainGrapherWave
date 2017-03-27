@@ -35,8 +35,8 @@ float hp = 100;
 int mem1 = 0;
 int scaleX = 0;
 int scaleY = 0;
-final int DATA_L = 6000;
-float scan = 0.1;
+final int DATA_L = 3000;
+float scan = 0.2;
 float offset = 0;
 final int YZ = 900;  // above jump 
 
@@ -260,7 +260,7 @@ void draw() {
       rectMode(CENTER);
       rect(px - sx, py - sy, 20, 20);
       rectMode(CORNER);
-      ellipse(mouseX / scaleX, mouseY / scaleY, 5, 5);
+      //ellipse(mouseX / scaleX, mouseY / scaleY, 5, 5);
     }
     if (i == 0) {
       for (int x = round(sx / 50 - 0.5); x < round(sx / 50 - 0.5) + 13; x++) {
