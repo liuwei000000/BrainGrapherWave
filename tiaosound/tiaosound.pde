@@ -1,4 +1,4 @@
-//Tiao Keng  //<>//
+//Tiao Keng  
 /*
 one pakges 8 bytes
  one big pakge 36 bytes
@@ -33,15 +33,15 @@ float death = 0;
 int died = 0;
 float hp = 100;
 int mem1 = 0;
-int scaleX = 0;
-int scaleY = 0;
+float scaleX = 0;
+float scaleY = 0;
 final int DATA_L = 3000;
 float scan = 0.2;
 float offset = 0;
 final int YZ = 700;  // above jump 
 
 void setup() {
-  size(600, 400);//window size
+  size(900, 600);//window size
   f0 = new SoundFile(this, "z.mp3");
   f1 = new SoundFile(this, "b.wav");
   f2 = new SoundFile(this, "s.mp3");
@@ -111,7 +111,7 @@ void draw() {
     print("|"); 
     println(right);
   }
-  scale(width / 600, height / 400);
+  scale(width / 600.0, height / 400.0);
   scaleX = width / 600;
   scaleY = height / 400;  
   if (hp < 0) {
