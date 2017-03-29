@@ -38,7 +38,7 @@ int scaleY = 0;
 final int DATA_L = 3000;
 float scan = 0.2;
 float offset = 0;
-final int YZ = 900;  // above jump 
+final int YZ = 700;  // above jump 
 
 void setup() {
   size(600, 400);//window size
