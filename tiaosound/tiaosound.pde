@@ -1,4 +1,4 @@
-//Tiao Keng  
+//Tiao Keng   //<>//
 /*
 one pakges 8 bytes
  one big pakge 36 bytes
@@ -51,15 +51,15 @@ void setup() {
   port.buffer(BL);
   inBuffer = new byte[BL];
   data = new float[DATA_L]; 
-  for (int i = 0; i < DATA_L; i++) data[i] = 200;
+  for (int i = 0; i < DATA_L; i++) data[i] = height/2;
   //for (int i = 0; i < DATA_L; i++) data[i] = 190*sin(i*1.0/20) + 200;   
   //for (int i = DATA_L - 200 ; i < DATA_L; i++) data[i] = 200;  
   background(0);
   noStroke();
   //generate level
   for (int x = 0; x < 100; x++) {
-    level[x] = new int [100];
-    for (int y = 0; y < 100; y++) {
+    level[x] = new int [20];
+    for (int y = 0; y < 20; y++) {
       if (y < 10) {
         level[x][y] = 0;
       } else if (y < 14) {
