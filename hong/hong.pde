@@ -328,10 +328,10 @@ void  movement() {
   }
 
   //println(scan);
-  if ((p > 0) && ground == 1 && ((millis() - scan) > 1000)) {    
-    psy -= 0.6;
-    scan = millis();
-  }
+  //if ((p > 0) && ground == 1 && ((millis() - scan) > 1000)) {    
+  //  psy -= 0.6;
+  //  scan = millis();
+  //}
   //print(scan);
   //print("|");
   //println(millis());
